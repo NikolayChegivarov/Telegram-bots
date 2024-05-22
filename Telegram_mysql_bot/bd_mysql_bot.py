@@ -98,20 +98,23 @@ def handle_about_input(message, users_data, chat_id):
 
 
 def handle_photo_input(message, users_data, chat_id):
-    # Получение информации о файле фотографии из последнего сообщения.
-    file_info = bot.get_file(message.photo[-1].file_id)
-    # Скачивание файла фотографии с сервера Telegram.
-    downloaded_file = bot.download_file(file_info.file_path)
+    if message.content_type == 'photo':
+        # Получение информации о файле фотографии из последнего сообщения.
+        file_info = bot.get_file(message.photo[-1].file_id)
+        # Скачивание файла фотографии с сервера Telegram.
+        downloaded_file = bot.download_file(file_info.file_path)
 
-    # Проверка существования директории для хранения фотографий и создание её при отсутствии.
-    if not os.path.exists("photos"):
-        os.makedirs("photos")
+        # Проверка существования директории для хранения фотографий и создание её при отсутствии.
+        if not os.path.exists("photos"):
+            os.makedirs("photos")
 
-    # Сохранение скачанной фотографии в указанную директорию с именем файла, соответствующим ID чата.
-    with open(f"photos/{chat_id}.jpg", "wb") as new_file:
-        new_file.write(downloaded_file)
-    # Помещение в users_data.
-    users_data[chat_id]['photo'] = f"photos/{chat_id}.jpg"
+        # Сохранение скачанной фотографии в указанную директорию с именем файла, соответствующим ID чата.
+        with open(f"photos/{chat_id}.jpg", "wb") as new_file:
+            new_file.write(downloaded_file)
+        # Помещение в users_data.
+        users_data[chat_id]['photo'] = f"photos/{chat_id}.jpg"
+    else:
+        users_data[chat_id]['photo'] = 'Нет фото.'
 
     # ДЛЯ ОТПРАВЛЕНИЯ СООБЩЕНИЯ С СОБРАННОЙ ИНФОРМАЦИЕЙ. Не удалять!!!
     # # Преобразование user_data в словарь Python
@@ -154,8 +157,9 @@ def handle_photo_input(message, users_data, chat_id):
     # Завершаем транзакцию и сохраняем изменения
     cnx.commit()
 
-    # bot.send_message(message.chat.id, 'Вы успешно зарегистированны')  # Corrected here
+    bot.send_message(message.chat.id, 'Вы успешно зарегистированны')  #
     print('user создан В БАЗЕ ДАННЫХ')
+
 
     users_data.pop(chat_id)
     print('ИНФОРМАЦИЯ СТЕРТА')
