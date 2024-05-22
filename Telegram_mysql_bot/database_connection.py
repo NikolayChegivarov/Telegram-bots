@@ -15,7 +15,6 @@ def connect_to_database():
         database=your_database,
         connect_timeout=30  # Установка таймаута подключения.
     )
-    # print(f'Создаем объект соединения MySQL {bd}')
     print(f'Создаем объект соединения MySQL {cnx}')
     cursor = cnx.cursor()
     return cnx, cursor
