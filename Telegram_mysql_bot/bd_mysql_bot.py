@@ -45,7 +45,7 @@ def callback_query(call):
         print('Введите имя')
         bot.register_next_step_handler(call.message, handle_first_name_input, users_data, chat_id)
     elif call.data == 'no':
-        print(users_data)
+        bot.send_message(call.message.chat.id, 'Возвращайтесь если передумаете.')
         pass
 
 
@@ -159,7 +159,6 @@ def handle_photo_input(message, users_data, chat_id):
 
     bot.send_message(message.chat.id, 'Вы успешно зарегистированны')  #
     print('user создан В БАЗЕ ДАННЫХ')
-
 
     users_data.pop(chat_id)
     print('ИНФОРМАЦИЯ СТЕРТА')
