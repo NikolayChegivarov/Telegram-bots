@@ -1,5 +1,6 @@
 from utils import create_bot, get_db_connection
 from interaction import send_welcome
+from database import check_and_create_tables
 
 # Подключение к боту.
 bot = create_bot()
@@ -7,6 +8,11 @@ bot = create_bot()
 try:
     # Получаем соединение с базой данных
     cnx, cursor = get_db_connection()
+
+    # Проверяем и создаем таблицы если необходимо
+    check_and_create_tables(cursor)
+    cnx.commit()  # Применяем изменения
+
 except ConnectionError as e:
     print(f"Ошибка при подключении к базе данных: {e}")
     exit(1)
@@ -22,11 +28,14 @@ def entrance(message):
     chat_id = str(message.chat.id)
     users_data[chat_id] = {'first_last_name': '', 'phone': '', 'spec': '', 'about': '', 'photo': ''}
 
+    # Отправляем сообщение пользователю.
     send_welcome(message)
 
 
-cursor.close()
-cnx.close()
-
 if __name__ == "__main__":
-    bot.polling(none_stop=True)
+    try:
+        bot.polling(none_stop=True)
+    finally:
+        # Закрываем соединение с базой данных после завершения работы бота
+        cursor.close()
+        cnx.close()
