@@ -18,7 +18,7 @@ def check_and_create_tables(cursor):
             address TEXT,
             task_text TEXT,
             task_status VARCHAR(100) NOT NULL,
-            driver INTEGER REFERENCES users(id_user) NULL
+            executor INTEGER REFERENCES users(id_user) NULL
         """)
     ]
 
