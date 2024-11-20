@@ -1,6 +1,7 @@
 from utils import create_bot, get_db_connection
 from interaction import send_welcome
 from database import check_and_create_tables
+from database import execute_sql_query  # функция для выполнения SQL запросов.
 
 # Подключение к боту.
 bot = create_bot()
@@ -17,22 +18,37 @@ except ConnectionError as e:
     print(f"Ошибка при подключении к базе данных: {e}")
     exit(1)
 
-users_data = {}
-
 
 @bot.message_handler(func=lambda message: True)
 def entrance(message):
-    print(f'Сообщение: {message}')
-    print(f'{message.from_user.first_name} вошел в систему.\n')
+    print(f'Сообщение: {message}\n')
 
     user_id = str(message.from_user.id)
-    print(f'{user_id} вошел в чат.')
+    username = message.from_user.username if message.from_user.username else None
+    first_name = message.from_user.first_name if message.from_user.first_name else None
+    last_name = message.from_user.last_name if message.from_user.last_name else None
 
-    # Отправляем сообщение пользователю. 476822305 476822305
+    print(f'Вошел(а) в систему:\nid пользователя-{user_id}\nusername-{username}\nfirst_name-{first_name}\nlast_name-{last_name}\n')
+
+    # Проверяем, существует ли уже пользователь в базе данных
+    query = "SELECT * FROM users WHERE id_user = %s"
+    result = execute_sql_query(cnx, cursor, query, (user_id,))
+    print(f"Запрос в бд:\n {result}")
+
+    if not result:
+        # Если пользователя нет, добавляем его в базу данных
+        insert_query = """
+            INSERT INTO users (id_user, name, surname)
+            VALUES (%s, %s, %s)
+        """
+        execute_sql_query(cnx, cursor, insert_query, (user_id, first_name, last_name))
+        cnx.commit()
+        print(f"Новый пользователь {first_name} {last_name} добавлен в базу данных.")
+    else:
+        print(f"Пользователь {first_name} {last_name} уже существует в базе данных.")
+
+    # Отправляем сообщение пользователю
     send_welcome(message)
-
-
-user = {}
 
 
 @bot.callback_query_handler(func=lambda call: True)

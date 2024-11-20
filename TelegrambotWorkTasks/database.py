@@ -7,8 +7,8 @@ def check_and_create_tables(cursor):
     tables_to_check = [
         ("users", """
             id_user INTEGER PRIMARY KEY, 
-            name VARCHAR(100) NULL,
-            surname VARCHAR(100) NULL,
+            first_name VARCHAR(100) NULL,
+            last_name VARCHAR(100) NULL,
             user_status VARCHAR(100) NULL
         """),
         ("tasks", """
@@ -48,6 +48,11 @@ def check_and_create_tables(cursor):
 
 
 def main():
+    """Основная функция программы.
+    Устанавливает соединение с базой данных,
+    проверяет наличие и создает необходимые таблицы,
+    выполняет операции с базой данных,
+    а затем закрывает соединение."""
     cnx = connect_to_database()
     if cnx:
         cursor = cnx.cursor()
@@ -60,6 +65,36 @@ def main():
         cnx.close()
     else:
         print("Не удалось установить соединение с базой данных.")
+
+
+def execute_sql_query(cnx, cursor, query, params=None):
+    """
+    Выполняет SQL-запрос и возвращает результат.
+
+    Аргументы:
+        cnx (connection): Соединение с базой данных
+        cursor (cursor): Курсор для выполнения запросов
+        query (str): Текст SQL-запроса
+        params (tuple или dict, опционально): Параметры для подстановки в запрос
+
+    Возвращаемое значение:
+        list или None: Результат выполнения запроса или None в случае ошибки
+
+    Примечание:
+        Функция автоматически фиксирует изменения (commit) при успешном выполнении запроса
+        и откатывает транзакцию (rollback) в случае возникновения исключения.
+    """
+    try:
+        if params:
+            cursor.execute(query, params)
+        else:
+            cursor.execute(query)
+        cnx.commit()
+        return cursor.fetchall()
+    except Exception as e:
+        print(f"Ошибка при выполнении SQL-запроса: {e}")
+        cnx.rollback()
+        return None
 
 
 if __name__ == "__main__":

@@ -39,7 +39,7 @@ class Keyboards:
         Добавление кнопок на клавиатуру и возврат готовой разметки.
         """
         self.markup.add(self.button_knight, self.button_mouse)
-        print('Кнопки: Водитель или воротничек?.\n')
+        print('Кнопки: Водитель или воротничек?\n')
         return self.markup
 
     # def registration(self):
