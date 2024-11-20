@@ -1,5 +1,5 @@
 from utils import create_bot, get_db_connection
-from interaction import send_welcome
+from interaction import send_welcome, mine
 from database import check_and_create_tables
 from database import execute_sql_query  # функция для выполнения SQL запросов.
 
@@ -49,6 +49,7 @@ def entrance(message):
         send_welcome(message)
     else:
         print(f"Пользователь {first_name} {last_name} уже существует в базе данных.")
+        mine(message)
 
 
 @bot.callback_query_handler(func=lambda call: True)
