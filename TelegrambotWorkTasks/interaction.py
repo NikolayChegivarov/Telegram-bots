@@ -13,4 +13,4 @@ def send_welcome(message):
     """
     keyboard = Keyboards().registration()
     bot.send_message(message.chat.id, 'Кто ты воин?', reply_markup=keyboard)
-    print('Поздоровались.')
+    # print('Поздоровались.')

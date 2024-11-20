@@ -7,14 +7,14 @@ def check_and_create_tables(cursor):
     tables_to_check = [
         ("users", """
             id_user INTEGER PRIMARY KEY, 
-            name VARCHAR(100) NOT NULL,
-            surname VARCHAR(100) NOT NULL,
-            user_status VARCHAR(100) NOT NULL
+            name VARCHAR(100) NULL,
+            surname VARCHAR(100) NULL,
+            user_status VARCHAR(100) NULL
         """),
         ("tasks", """
             id_task SERIAL PRIMARY KEY,
             datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            avtor INTEGER REFERENCES users(id_user) NOT NULL,
+            author INTEGER REFERENCES users(id_user) NOT NULL,
             address TEXT,
             task_text TEXT,
             task_status VARCHAR(100) NOT NULL,
@@ -44,7 +44,7 @@ def check_and_create_tables(cursor):
 
             print(f"Таблица {table_name} создана.")
 
-    print("Все необходимые таблицы созданы или уже существуют.")
+    print("Все необходимые таблицы созданы или уже существуют.\n")
 
 
 def main():
