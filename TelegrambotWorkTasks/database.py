@@ -16,6 +16,7 @@ def check_and_create_tables(cursor):
             id_task SERIAL PRIMARY KEY,
             datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             author INTEGER REFERENCES users(id_user) NOT NULL,
+            city TEXT,
             address TEXT,
             task_text TEXT,
             task_status VARCHAR(100) NOT NULL,

@@ -34,7 +34,7 @@ class Keyboards:
         self.button_no = InlineKeyboardButton('Взять задачу', callback_data='take')
         self.button_no = InlineKeyboardButton('Пометить "сделано"', callback_data='done')
 
-    def registration(self):
+    def registration_keyboard(self):
         """
         Добавление кнопок на клавиатуру и возврат готовой разметки.
         """
@@ -42,10 +42,10 @@ class Keyboards:
         print('Кнопки: Водитель или воротничек?\n')
         return self.markup
 
-    # def registration(self):
-    #     """
-    #     Добавление кнопок на клавиатуру и возврат готовой разметки.
-    #     """
-    #     self.markup.add(self.button_kostroma, self.button_msk, self.button_full, self.button_set, self.button_del)
-    #     print('Предложили выбор кнопок.')
-    #     return self.markup
+    def registration(self):
+        """
+        Добавление кнопок на клавиатуру и возврат готовой разметки.
+        """
+        self.markup.add(self.button_kostroma, self.button_msk, self.button_full, self.button_set, self.button_del)
+        print('Предложили выбор кнопок.')
+        return self.markup
