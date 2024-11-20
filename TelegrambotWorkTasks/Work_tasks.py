@@ -31,15 +31,15 @@ def entrance(message):
     print(f'Вошел(а) в систему:\nid пользователя-{user_id}\nusername-{username}\nfirst_name-{first_name}\nlast_name-{last_name}\n')
 
     # Проверяем, существует ли уже пользователь в базе данных
-    query = "SELECT * FROM users WHERE id_user = %s"
+    query = "SELECT * FROM users WHERE id_user = %s::BIGINT"
     result = execute_sql_query(cnx, cursor, query, (user_id,))
     print(f"Запрос в бд:\n {result}")
 
     if not result:
         # Если пользователя нет, добавляем его в базу данных
         insert_query = """
-            INSERT INTO users (id_user, name, surname)
-            VALUES (%s, %s, %s)
+            INSERT INTO users (id_user, first_name, last_name)
+            VALUES (%s::BIGINT, %s, %s)
         """
         execute_sql_query(cnx, cursor, insert_query, (user_id, first_name, last_name))
         cnx.commit()
@@ -53,17 +53,21 @@ def entrance(message):
 
 @bot.callback_query_handler(func=lambda call: True)
 def callback_query(call):
-    chat_id = str(call.message.chat.id)
+    chat_id = str(call.chat.id)
     print(f'chat_id: {chat_id}')
     if call.data == 'knight':
-        print("knight")
+        # print("Водитель")
+        # user_id = str(call.from_user.id)
+        # username = call.from_user.username if call.from_user.username else None
+        # first_name = call.from_user.first_name if call.from_user.first_name else None
+        # last_name = call.from_user.last_name if call.from_user.last_name else None
 
         pass
         bot.send_message(call.message.chat.id, 'Введите имя и фамилию.')
         # print('Введите имя')
         # bot.register_next_step_handler(call.message, handle_first_name_input, users_data, chat_id)
     elif call.data == 'mouse':
-        print("mouse")
+        print("Воротничек")
         bot.send_message(call.message.chat.id, 'Возвращайтесь если передумаете.')
         pass
 

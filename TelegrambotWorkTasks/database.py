@@ -6,9 +6,10 @@ def check_and_create_tables(cursor):
     """Проверяет наличие необходимых таблиц и создает их при необходимости."""
     tables_to_check = [
         ("users", """
-            id_user INTEGER PRIMARY KEY, 
+            id_user BIGINT PRIMARY KEY, 
             first_name VARCHAR(100) NULL,
             last_name VARCHAR(100) NULL,
+            username VARCHAR(100) NULL,
             user_status VARCHAR(100) NULL
         """),
         ("tasks", """
