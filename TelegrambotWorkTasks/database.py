@@ -94,7 +94,6 @@ def execute_sql_query(cnx, cursor, query, params=None):
         cnx.commit()
         return cursor.fetchall()
     except Exception as e:
-        print(f"Ошибка при выполнении SQL-запроса: {e}")
         cnx.rollback()
         return None
 

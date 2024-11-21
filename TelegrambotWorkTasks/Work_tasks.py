@@ -47,31 +47,51 @@ def entrance(message):
         print(f"Новый пользователь {first_name} {last_name} добавлен в базу данных.")
         # Отправляем сообщение пользователю
         send_welcome(message)
+        return 'ok'
     else:
         print(f"Пользователь {first_name} {last_name} уже существует в базе данных.")
         mine(message)
+        return 'ok'
 
 
 @bot.callback_query_handler(func=lambda call: True)
 def callback_query(call):
-    chat_id = str(call.chat.id)
-    print(f'chat_id: {chat_id}')
+    user_id = int(call.from_user.id)
+    print(f'chat_id: {user_id}')
     if call.data == 'knight':
-        print("Водитель")
-        user_id = str(call.from_user.id)
-        username = call.from_user.username if call.from_user.username else None
-        first_name = call.from_user.first_name if call.from_user.first_name else None
-        last_name = call.from_user.last_name if call.from_user.last_name else None
+        print("Родился водитель")
+        user_status = "Водитель"
 
+        update_query = """
+            UPDATE users
+            SET user_status = %s
+            WHERE id_user = %s
+        """
 
-        pass
-        bot.send_message(call.message.chat.id, 'Введите имя и фамилию.')
-        # print('Введите имя')
-        # bot.register_next_step_handler(call.message, handle_first_name_input, users_data, chat_id)
+        result = execute_sql_query(cnx, cursor, update_query, (user_status, user_id))
+        cnx.commit()
+
+        print(f"Статус {call.from_user.first_name} обновлен.\n")
+
+        # Сохраняем user_id в контексте бота
+        bot.set_state(user_id, 'wait_for_name')
+        # Отправляем сообщение пользователю.
+        bot.send_message(call.message.chat.id, 'Введите имя.')
+
+        return 'ok'
+
     elif call.data == 'mouse':
         print("Мышь")
         bot.send_message(call.message.chat.id, 'Возвращайтесь если передумаете.')
         pass
+
+
+@bot.message_handler(state='wait_for_name')
+def handle_user_name(message):
+    print(f"Получено сообщение от пользователя {message.from_user.id}")
+    user_id = message.from_user.id
+    text = message.text
+    print(f"text: {text}")
 
 
 if __name__ == "__main__":
