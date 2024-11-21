@@ -85,11 +85,11 @@ def callback_query(call):
 
 
 def first_name_we_get(message):
-    print(f"Получено сообщение от пользователя {message.from_user.id}")
     user_id = message.from_user.id
     first_name = message.text
     print(f"first_name: {first_name}")
 
+    # Заносим имя в бд.
     update_query = """
         UPDATE users
         SET first_name = %s
@@ -99,17 +99,30 @@ def first_name_we_get(message):
     result = execute_sql_query(cnx, cursor, update_query, (first_name, user_id))
     cnx.commit()
 
+    print(f"Имя {first_name} в бд занесено.")
+
     bot.send_message(message.chat.id, 'Введите фамилию.')
     return bot.register_next_step_handler_by_chat_id(message.chat.id, last_name_we_get)
 
 
 def last_name_we_get(message):
-    print(f"Получено сообщение от пользователя {message.from_user.id}")
-    user_id = message.last_name.id
+    user_id = message.from_user.id
     last_name = message.text
     print(f"last_name: {last_name}")
 
-    bot.send_message(message.message.chat.id, 'Заебись.')
+    # Заносим имя в бд.
+    update_query = """
+        UPDATE users
+        SET last_name = %s
+        WHERE id_user = %s
+    """
+
+    result = execute_sql_query(cnx, cursor, update_query, (last_name, user_id))
+    cnx.commit()
+
+    print(f"Фамилия {last_name} в бд занесена.")
+
+    bot.send_message(message.chat.id, 'Заебись.')
 
 
 if __name__ == "__main__":
