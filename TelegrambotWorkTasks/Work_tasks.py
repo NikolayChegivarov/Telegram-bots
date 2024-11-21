@@ -58,6 +58,7 @@ def entrance(message):
 def callback_query(call):
     user_id = int(call.from_user.id)
     print(f'chat_id: {user_id}')
+
     if call.data == 'knight':
         print("Родился водитель")
         user_status = "Водитель"
@@ -73,12 +74,9 @@ def callback_query(call):
 
         print(f"Статус {call.from_user.first_name} обновлен.\n")
 
-        # Сохраняем user_id в контексте бота
-        bot.set_state(user_id, 'wait_for_name')
-        # Отправляем сообщение пользователю.
+        # Отправить сообщение с просьбой указать имя и зарегистрировать обработчика следующего шага
         bot.send_message(call.message.chat.id, 'Введите имя.')
-
-        return 'ok'
+        return bot.register_next_step_handler_by_chat_id(call.message.chat.id, process_name)
 
     elif call.data == 'mouse':
         print("Мышь")
@@ -86,12 +84,19 @@ def callback_query(call):
         pass
 
 
-@bot.message_handler(state='wait_for_name')
-def handle_user_name(message):
+def process_name(message):
     print(f"Получено сообщение от пользователя {message.from_user.id}")
     user_id = message.from_user.id
     text = message.text
     print(f"text: {text}")
+
+    # Process the name here
+    # For example, save the name to the database
+
+    # Send a confirmation message
+    bot.send_message(message.chat.id, f"Спасибо, {text}")
+
+    # You might want to send another keyboard or ask for further actions here
 
 
 if __name__ == "__main__":
