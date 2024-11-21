@@ -1,5 +1,5 @@
 from utils import create_bot, get_db_connection
-from interaction import send_welcome, mine
+from interaction import send_welcome, manager, driver
 from database import check_and_create_tables
 from database import execute_sql_query  # функция для выполнения SQL запросов.
 
@@ -50,7 +50,7 @@ def entrance(message):
         return 'ok'
     else:
         print(f"Пользователь {first_name} {last_name} уже существует в базе данных.")
-        mine(message)
+        manager(message)
         return 'ok'
 
 
@@ -120,9 +120,10 @@ def last_name_we_get(message):
     result = execute_sql_query(cnx, cursor, update_query, (last_name, user_id))
     cnx.commit()
 
-    print(f"Фамилия {last_name} в бд занесена.")
+    # Высылаем начальную клавиатуру для водителя.
+    driver(message)
 
-    bot.send_message(message.chat.id, 'Заебись.')
+    print(f"Фамилия {last_name} в бд занесена.")
 
 
 if __name__ == "__main__":

@@ -26,11 +26,15 @@ class Keyboards:
         self.markup = InlineKeyboardMarkup(row_width=2)
         self.button_knight = InlineKeyboardButton('Рыцарь дорог', callback_data='knight')
         self.button_mouse = InlineKeyboardButton('Мышь офисная', callback_data='mouse')
-        self.button_full = InlineKeyboardButton('Задачи все', callback_data='full')
-        self.button_kostroma = InlineKeyboardButton('Задачи сегодня Кострома', callback_data='kostroma')
-        self.button_msk = InlineKeyboardButton('Задачи сегодня Москва', callback_data='msk')
+        self.button_tasks = InlineKeyboardButton('Клавиатура с задачами', callback_data='tasks')
+        self.button_task_full = InlineKeyboardButton('Задачи сегодня все', callback_data='full')
+        self.button_task_kostroma = InlineKeyboardButton('Задачи сегодня Кострома', callback_data='kostroma')
+        self.button_task_msk = InlineKeyboardButton('Задачи сегодня Москва', callback_data='msk')
+        self.button_task_nn = InlineKeyboardButton('Задачи сегодня Нижний Новгород', callback_data='nn')
+        # Кнопки менеджерам
         self.button_set = InlineKeyboardButton('Поставить задачу', callback_data='set')
         self.button_del = InlineKeyboardButton('Удалить задачу', callback_data='del')
+        # Кнопки менеджерам
         self.button_no = InlineKeyboardButton('Взять задачу', callback_data='take')
         self.button_no = InlineKeyboardButton('Пометить "сделано"', callback_data='done')
 
@@ -42,10 +46,23 @@ class Keyboards:
         print('Кнопки: Водитель или мышь?\n')
         return self.markup
 
-    def mine_keyboard(self):
+    def manager_keyboard(self):
         """
-        Добавление кнопок на клавиатуру.
+        Клавиатура для менеджеров.
         """
-        self.markup.add(self.button_full, self.button_set)
-        print('Клавиатура для своих.')
+        self.markup.add(self.button_tasks, self.button_tasks)
+        return self.markup
+
+    def driver_keyboard(self):
+        """
+        Клавиатура для водителей.
+        """
+        self.markup.add(self.button_task_full, self.button_task_kostroma, self.button_task_msk, self.button_task_nn)
+        return self.markup
+
+    def tasks_keyboard(self):
+        """
+        Клавиатура задачи.
+        """
+        self.markup.add(self.button_task_full, self.button_task_kostroma, self.button_task_msk, self.button_task_nn)
         return self.markup

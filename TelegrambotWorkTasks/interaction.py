@@ -8,11 +8,19 @@ bot = create_bot()
 def send_welcome(message):
     keyboard = Keyboards().registration_keyboard()
     bot.send_message(message.chat.id, 'Кто ты воин?', reply_markup=keyboard)
-    # print('Поздоровались.')
 
 
+# Начальное сообщение менеджерам.
 @bot.message_handler(commands=['start', 'help'])
-def mine(message):
-    keyboard = Keyboards().mine_keyboard()
-    bot.send_message(message.chat.id, 'Че хотел?', reply_markup=keyboard)
-    # print('Поздоровались.')
+def manager(message):
+    keyboard = Keyboards().manager_keyboard()
+    bot.send_message(message.chat.id, 'Добро пожаловать.', reply_markup=keyboard)
+
+
+# Начальное сообщение водителям.
+@bot.message_handler(commands=['start', 'help'])
+def driver(message):
+    keyboard = Keyboards().driver_keyboard()
+    bot.send_message(message.chat.id, 'Добро пожаловать.', reply_markup=keyboard)
+
+
