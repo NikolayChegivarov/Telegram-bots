@@ -76,7 +76,7 @@ def callback_query(call):
 
         # Отправить сообщение с просьбой указать имя и зарегистрировать обработчика следующего шага
         bot.send_message(call.message.chat.id, 'Введите имя.')
-        return bot.register_next_step_handler_by_chat_id(call.message.chat.id, process_name)
+        return bot.register_next_step_handler_by_chat_id(call.message.chat.id, first_name_we_get)
 
     elif call.data == 'mouse':
         print("Мышь")
@@ -84,19 +84,32 @@ def callback_query(call):
         pass
 
 
-def process_name(message):
+def first_name_we_get(message):
     print(f"Получено сообщение от пользователя {message.from_user.id}")
     user_id = message.from_user.id
-    text = message.text
-    print(f"text: {text}")
+    first_name = message.text
+    print(f"first_name: {first_name}")
 
-    # Process the name here
-    # For example, save the name to the database
+    update_query = """
+        UPDATE users
+        SET first_name = %s
+        WHERE id_user = %s
+    """
 
-    # Send a confirmation message
-    bot.send_message(message.chat.id, f"Спасибо, {text}")
+    result = execute_sql_query(cnx, cursor, update_query, (first_name, user_id))
+    cnx.commit()
 
-    # You might want to send another keyboard or ask for further actions here
+    bot.send_message(message.chat.id, 'Введите фамилию.')
+    return bot.register_next_step_handler_by_chat_id(message.chat.id, last_name_we_get)
+
+
+def last_name_we_get(message):
+    print(f"Получено сообщение от пользователя {message.from_user.id}")
+    user_id = message.last_name.id
+    last_name = message.text
+    print(f"last_name: {last_name}")
+
+    bot.send_message(message.message.chat.id, 'Заебись.')
 
 
 if __name__ == "__main__":
