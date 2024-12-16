@@ -14,12 +14,13 @@ def check_and_create_tables(cursor):
         """),
         ("tasks", """
             id_task SERIAL PRIMARY KEY,
-            datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            date DATE NOT NULL,
             author INTEGER REFERENCES users(id_user) NOT NULL,
-            city TEXT,
-            address TEXT,
-            task_text TEXT,
-            task_status VARCHAR(100) NOT NULL,
+            city TEXT  NOT NULL,
+            address TEXT  NOT NULL,
+            task_text TEXT  NOT NULL,
+            task_status VARCHAR(100) NULL,
             executor INTEGER REFERENCES users(id_user) NULL
         """)
     ]

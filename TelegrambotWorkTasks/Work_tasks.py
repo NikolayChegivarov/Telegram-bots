@@ -31,7 +31,7 @@ def entrance(message):
     print(f'Вошел(а) в систему:\nid пользователя-{user_id}\nusername-{username}\n'
           f'first_name-{first_name}\nlast_name-{last_name}\n')
 
-    # Проверяем, существует ли уже пользователь в базе данных
+    # Проверяем, существует ли уже пользователь в базе данных.
     query = "SELECT * FROM users WHERE id_user = %s::BIGINT"
     result = execute_sql_query(cnx, cursor, query, (user_id,))
     print(f"Запрос в бд:\n {result}")
@@ -45,11 +45,19 @@ def entrance(message):
         execute_sql_query(cnx, cursor, insert_query, (user_id, first_name, last_name))
         cnx.commit()
         print(f"Новый пользователь {first_name} {last_name} добавлен в базу данных.")
-        # Отправляем сообщение пользователю
+        # Выясняем статус.
         send_welcome(message)
         return 'ok'
     else:
         print(f"Пользователь {first_name} {last_name} уже существует в базе данных.")
+        # Запрос статуса
+        status = """SELECT user_status 
+        FROM users
+        WHERE id_user = %s"""
+        cursor.execute(status, (user_id,))
+        status_result = cursor.fetchone()
+        print(f'Status: {status_result}')
+
         manager(message)
         return 'ok'
 
